@@ -1,0 +1,1 @@
+This is a small project to test different functions of GitHub and I'll be uploading it to my profile to verify that it works
