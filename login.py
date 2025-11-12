@@ -29,6 +29,12 @@ def login_user(username, password):
     with open('users.txt', 'r') as f:
         lines = f.readlines()
         for line in lines:
-            u_name, hash = line.strip().split(",")
+            u_name, hash_with_space = line.strip().split(",")
+            hash = hash_with_space.strip()
             if u_name == username:
-                verify_password(password, hash)
+                is_verified = verify_password(password, hash)
+                if is_verified:
+                    print(f"Login successful for user: {username}")
+                else:
+                    print("Login failed: Incorrect password.")
+                return is_verified # Exit the function immediately after finding the user
