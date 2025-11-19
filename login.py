@@ -21,12 +21,12 @@ def register_user():
     username = input("Enter username: ")
     password = input("Enter password: ")
     hashed_password = hash_pass(password)
-    with open('users.txt', 'a') as f:
+    with open('DATA/users.txt', 'a') as f:
         f.write(f"{username}, {hashed_password}\n")
     print("User registered successfully")
 
 def login_user(username, password):
-    with open('users.txt', 'r') as f:
+    with open('DATA/users.txt', 'r') as f:
         lines = f.readlines()
         for line in lines:
             u_name, hash_with_space = line.strip().split(",")
