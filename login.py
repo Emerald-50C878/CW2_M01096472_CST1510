@@ -1,5 +1,7 @@
 import bcrypt
 import os
+import sqlite3
+from main import add_user
 
 plain_text_pass = "Magic123"
 
@@ -21,8 +23,15 @@ def register_user():
     username = input("Enter username: ")
     password = input("Enter password: ")
     hashed_password = hash_pass(password)
+
+    #save to text file (optional but im doing it anyways as a backup)
     with open('DATA/users.txt', 'a') as f:
         f.write(f"{username}, {hashed_password}\n")
+    
+    #save to database
+    conn = sqlite3.connect("DATA/intelligence_platform.db")
+    add_user(conn, username, hashed_password)
+    
     print("User registered successfully")
 
 def login_user(username, password):

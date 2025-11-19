@@ -13,7 +13,11 @@ def menu():
 def main():
     while True:
         menu()
-        choice = input('')
+        try:
+            choice = input("")
+        except KeyboardInterrupt:
+            print("\nProgram interrupted. Exiting safely...")
+        returnchoice = input('')
         if choice == "1":
             register_user()
         elif choice == "2":
@@ -32,11 +36,18 @@ if __name__ == "__main__":
 #connect to database 
 conn = sqlite3.connect("DATA/intelligence_platform.db")
 
-def add_user(conn, name, hash):
+def create_user_table():
+    cursor = conn.cursor()
+    # Create table 
+    cursor.execute(""" CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT NOT NULL UNIQUE, password_hash TEXT NOT NULL, role TEXT DEFAULT 'user' ) """)
+    # Save changes 
+    conn.commit()
+
+def add_user(conn, username, hashed_password, role = "user"):
     cursor = conn.cursor()
     sql = (""" INSERT INTO users (username, password_hash, role) VALUES (?, ?, ?) """) 
-    param =  (sql, hash)
-    cursor.execute(sql,param)
+    param =  (username, hashed_password)
+    cursor.execute(sql, param)
     conn.commit()
 
 def get_users():
@@ -44,23 +55,47 @@ def get_users():
     sql = ("""SELECT * FROM users""")
     cursor.execute(sql)
     users = cursor.fetchall()
-    conn.close()
     return users
 
 def migrate_user_data():
     with open("DATA/users.txt", "r") as f:
         users = f.readlines()
     for user in users:
-        name, hash = user.strip().split(",")
+        username, hash = user.strip().split(",")
         print(user)
-    conn.close()
+    return 
 
 def select_user(cursor):
     cursor.execute("""SELECT * FROM users""") 
     all_users = cursor.fetchall() # Returns list of all rows
 
+def migrate_cyber_table():
+    cyber = pd.read_csv("DATA/cyber_incidents.csv")
+    # View first 5 rows
+    print(cyber.head()) # Check data types and missing values
+    print(cyber.info()) # Check for missing data
+    print(cyber.isnull().sum())
+    # Connect to database
+    conn = sqlite3.connect('DATA/intelligence_platform.db')
+    # Bulk insert all rows 
+    cyber.to_sql( 'cyber_incidents', conn, if_exists='append', index=False ) 
+    print("✓ Data loaded successfully")
+    # Count rows in database 
+    cursor = conn.cursor() 
+    cursor.execute("SELECT COUNT(*) FROM cyber_incidents") 
+    count = cursor.fetchone()[0] 
+    print(f"Loaded {count} incidents") # View sample data cursor.execute("SELECT * FROM cyber_incidents LIMIT 3") 
+    for row in cursor.fetchall(): 
+        print(row)
 
-cyber = pd.read_csv("DATA/cyber_incidents.csv")
-print(cyber)
-
-print(migrate_user_data)
+def migrate_it_tickets():
+    datait = pd.read_csv("DATA/it_tickets.csv")
+    # View first 5 rows
+    print(datait.head()) # Check data types and missing values
+    print(datait.info()) # Check for missing data
+    print(datait.isnull().sum())
+    # Connect to database
+    conn = sqlite3.connect('DATA/intelligence_platform.db')
+    # Bulk insert all rows 
+    datait.to_sql( 'it_tickets', conn, if_exists='append', index=False ) 
+    print("✓ Data loaded successfully")
