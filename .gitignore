@@ -6,3 +6,6 @@ __pycache__/
 .idea/
 .venv/
 user.txt
+cyber_incidents.csv
+datasets_metadata.csv
+it_tickets.csv

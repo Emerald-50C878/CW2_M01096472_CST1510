@@ -33,3 +33,5 @@ def migrate_user_data():
         name, hash = user.strip().split(",")
         print(user)
 
+user = user_login(conn)
+print(user)

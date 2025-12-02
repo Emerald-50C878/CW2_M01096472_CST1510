@@ -1,8 +1,9 @@
 import bcrypt
 import pandas as pd
 import sqlite3
-from pathlib import Path
 from login import login_user, register_user
+from pathlib import Path
+
 
 def menu():
     print(" ---! Choose an option: !---")

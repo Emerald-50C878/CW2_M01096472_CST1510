@@ -1,0 +1,21 @@
+id,username,department,skill_level,years_experience,last_login,risk_score,project
+1,user1,Data Science,Intermediate,14,2023-01-01,38.54,Data Pipeline
+2,user2,Cyber Security,Beginner,13,2023-01-02,1.6,AI Model
+3,user3,Data Science,Intermediate,2,2023-01-03,23.09,Security Audit
+4,user4,Data Science,Intermediate,11,2023-01-04,24.1,Security Audit
+5,user5,Data Science,Intermediate,6,2023-01-05,68.33,PenTest Report
+6,user6,Cyber Security,Intermediate,3,2023-01-06,61.0,Security Audit
+7,user7,Data Science,Beginner,8,2023-01-07,83.32,PenTest Report
+8,user8,Data Science,Beginner,2,2023-01-08,17.34,AI Model
+9,user9,Data Science,Intermediate,4,2023-01-09,39.11,Data Pipeline
+10,user10,Cyber Security,Intermediate,2,2023-01-10,18.22,Data Pipeline
+11,user11,Data Science,Beginner,6,2023-01-11,75.54,Data Pipeline
+12,user12,Data Science,Beginner,4,2023-01-12,42.52,Security Audit
+13,user13,Data Science,Beginner,8,2023-01-13,20.79,AI Model
+14,user14,Data Science,Advanced,6,2023-01-14,56.77,Security Audit
+15,user15,Cyber Security,Advanced,1,2023-01-15,3.13,Security Audit
+16,user16,Data Science,Advanced,3,2023-01-16,84.23,AI Model
+17,user17,Cyber Security,Intermediate,8,2023-01-17,44.98,AI Model
+18,user18,Cyber Security,Advanced,11,2023-01-18,39.52,AI Model
+19,user19,Cyber Security,Intermediate,13,2023-01-19,92.67,AI Model
+20,user20,Data Science,Intermediate,1,2023-01-20,72.73,Data Pipeline
