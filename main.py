@@ -1,7 +1,8 @@
 import bcrypt
 import pandas as pd
 import sqlite3
-from login import login_user, register_user
+from app.data.users import get_user
+from app.services.user_service import register_user, login_user
 from pathlib import Path
 
 
@@ -20,7 +21,7 @@ def main():
             print("\nProgram interrupted. Exiting safely...")
         returnchoice = input('')
         if choice == "1":
-            register_user()
+            register_user(username, password, role="user")
         elif choice == "2":
             username = input("Enter username: ")
             password = input("Enter Password: ")
@@ -32,6 +33,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 #connect to database 

@@ -1,53 +1,78 @@
 import streamlit as st
-import pandas as pd
+from app.data.db import connect_database
+from app.data.users import get_user, hash_password, is_valid_hash
+from pathlib import Path
+from app.services.user_service import register_user, login_user
+from app.data.schema import create_user_table
 
-st.set_page_config(
-    page_title="My app",
-    page_icon="👌",
-    layout="wide"
-)
+st.set_page_config(page_title="Login / Register", page_icon="🔑", layout="centered")
 
-col1, col2 = st.colums(2)
+conn = connect_database("DATA/intelligence_platform.db")
+# ---------- Initialise session state ----------
+if "users" not in st.session_state:
+    # Very simple in-memory "database": {username: password}
+    st.session_state.users = {}
 
-with col1:
-    st.subheader("Left")
+if "logged_in" not in st.session_state:
+    st.session_state.logged_in = False
 
-with col2:
-    st.subheader("Right")
+if "username" not in st.session_state:
+    st.session_state.username = ""
+
+st.title("🔐 Welcome")
+
+# If already logged in, go straight to dashboard (optional)
+if st.session_state.logged_in:
+    st.success(f"Already logged in as **{st.session_state.username}**.")
+    if st.button("Go to dashboard"):
+        # Use the official navigation API to switch pages
+        st.switch_page("pages/1_Dashboard.py")  # path is relative to Home.py :contentReference[oaicite:1]{index=1}
+    st.stop()  # Don’t show login/register again
+
+
+# ---------- Tabs: Login / Register ----------
+tab_login, tab_register = st.tabs(["Login", "Register"])
+
+# ----- LOGIN TAB -----
+with tab_login:
+    st.subheader("Login")
+
+    login_username = st.text_input("Username", key="login_username")
+    login_password = st.text_input("Password", type="password", key="login_password")
+    id, name, user_hash = get_user(conn, login_username)
     
- 
-df = pd.DataFrame({
-    "region": ["North", "South", "East", "West"],
-    "year": [2023, 2023, 2024, 2025],
-    "revenue": [45000, 30000, 50000, 35000]
-})
- 
-st.set_page_config(
-    page_title='My app',
-    page_icon='👋',
-    layout='wide'
-)
- 
- 
-st.title("📊 Sales Dashboard")
-with st.sidebar:
-    st.header('Control')
-    year = st.selectbox('Year', [2023, 2024, 2025])
-    
- 
-filter = df[(df['year'] == year)]
- 
-col1, col2 = st.columns(2)
- 
-with col1:
-    st.subheader('Left')
-    st.bar_chart(df.set_index("timestamp")("incident_id"))
- 
-with col2:
-    st.subheader('Right')
-    st.line_chart(df.set_index("timestamp")("incident_id"))
- 
- 
-with st.expander('See details'):
-    st.write('Hidden content')
-    st.dataframe(df)
+    if st.button("Log in", type="primary"):
+        users = st.session_state.users
+        if login_username == name and is_valid_hash(login_password, user_hash):
+            st.session_state.logged_in = True
+            st.session_state.username = login_username
+            st.success(f"Welcome back, {login_username}! ")
+
+            # Redirect to dashboard page
+            st.switch_page("pages/1_Dashboard.py")
+        else:
+            st.error("Invalid username or password.")
+
+
+
+# ----- REGISTER TAB -----
+with tab_register:
+    st.subheader("Register")
+
+    new_username = st.text_input("Choose a username", key="register_username")
+    new_password = st.text_input("Choose a password", type="password", key="register_password")
+    confirm_password = st.text_input("Confirm password", type="password", key="register_confirm")
+
+    if st.button("Create account"):
+        # Basic checks – again, just for teaching
+        if not new_username or not new_password:
+            st.warning("Please fill in all fields.")
+        elif new_password != confirm_password:
+            st.error("Passwords do not match.")
+        elif new_username in st.session_state.users:
+            st.error("Username already exists. Choose another one.")
+        else:
+            # "Save" user in our simple in-memory store
+            st.session_state.users[new_username] = new_password
+            st.success("Account created! You can now log in from the Login tab.")
+            st.info("Tip: go to the Login tab and sign in with your new account.")

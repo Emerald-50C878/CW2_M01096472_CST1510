@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 from app.data.db import connect_database
-from app.data.incidents import get_all_incidents
+from app.data.incidents import get_all_incidents, insert_incident
 from app.data.datasets import get_all_datasets
 from app.data.tickets import get_all_tickets
  

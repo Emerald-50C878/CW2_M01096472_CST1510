@@ -2,10 +2,8 @@ import streamlit as st
 # Import Week 8 database connection
 from app.data.db import connect_database
 # Import Week 8 CRUD functions for each domain
-from app.data.users import verify_user, get_user_role
-from app.data.datasets import get_all_datasets
-from app.data.tickets import get_all_tickets
 import pandas as pd
+from app.data.cyber_incidents import get_all_cyber_incidents
 
 st.image("https://streamlit.io/images/brand/streamlit-logo-secondary-colormark-darktext.svg", caption = "streamlit logo", use_container_width= True)
 
@@ -44,8 +42,24 @@ st.write(age)
 if age < 18:
     st.balloons()
 
+data = get_all_cyber_incidents(conn)
+st.title("Welcome to the home page")
+
+print(data['severity'].unique())
+'''
+Index(['index', incident_id', 'timestamp', 'severity', 'category', status', 'description'],
+    dtype= 'object')'''
+
+st.write(data)
+with st.sidebar:
+    st.header("Navigation")
+    st.selectbox('')
+    severity_ = st.selectbox('severity', data['severity'].unique())
+
+filtered_data = data[data['severity'] == severity_]
+
+st.write(filtered_data)
 # At the top of your Streamlit page (e.g., pages/1_Dashboard.py)
 
-import streamlit as st
 
 
