@@ -47,12 +47,11 @@ def get_users(conn):
     return users
 
 def get_user(conn, name_):
-    cursor = conn.cursor(conn, name_)
+    cursor = conn.cursor()
     sql = ("""SELECT * FROM users WHERE username == ?""")
     param = (name_,)
     cursor.execute(sql, param)
     user = cursor.fetchone()
-    conn.close
     return user
 
 # U - UPDATE       Modify existing data

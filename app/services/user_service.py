@@ -4,10 +4,10 @@ import sqlite3
 import pandas as pd
 from app.data.db import connect_database
 from app.data.users import get_user, add_user
-from app.data.schema import create_user_table
+from app.data.schema import create_users_table
 
 def register_user(username, password, role="user"):
-    conn = connect_database()
+    conn = connect_database(conn="DATA/intelligence_platform.db")
     cursor = conn.cursor()
 
     # Check if user already exists
